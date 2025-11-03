@@ -1,5 +1,5 @@
 pipeline {
-  agent { label 'appServer' }
+  agent any
   environment {
     DOCKERHUB_CREDENTIALS = 'cybr-3120'
     IMAGE_NAME = 'stajose/chatapp'
@@ -11,9 +11,8 @@ pipeline {
     }
 
 
-
     stage('BUILD-AND-TAG') {
-      agent { label 'CYBR-3120-Appserver' }
+      agent { label 'appServer' }
       steps {
         script {
           echo "Building Docker image ${IMAGE_NAME}..."
@@ -25,7 +24,7 @@ pipeline {
     }
 
     stage('POST-TO-DOCKERHUB') {
-      agent { label 'CYBR-3120-Appserver' }
+      agent { label 'appServer' }
       steps {
         script {
           echo "Pushing image ${IMAGE_NAME}:latest to Docker Hub"
@@ -44,12 +43,10 @@ pipeline {
       steps { sh 'echo Pulling image on server...' }
     }
 
-    stage('DAST') {
-      steps { sh 'echo Running DAST scan...' }
     }
 
     stage('DEPLOYMENT') {
-      agent { label 'CYBR-3120-Appserver' }
+      agent { label 'appServer' }
       steps {
         echo 'Starting deployment using docker compose...'
         dir("${WORKSPACE}") {
