@@ -10,7 +10,21 @@ pipeline {
       steps { checkout scm }
     }
 
-
+    stage('SonarQube Analysis') {
+        agent {
+            label ''
+            }
+            steps {
+                script {
+                    def scannerHome = tool ''
+                    withSonarQubeEnv('sonarqube') {
+                        sh "${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.projectKey=Chat-application \
+                            -Dsonar.sources=."
+                    }
+                }
+            }
+        }
 
     stage('BUILD-AND-TAG') {
       agent { label 'CYBR-3120-Appserver' }
