@@ -12,11 +12,11 @@ pipeline {
 
     stage('SonarQube Analysis') {
         agent {
-            label ''
+            label 'CYBR-3120-Appserver'
             }
             steps {
                 script {
-                    def scannerHome = tool ''
+                    def scannerHome = tool 'SonarQube-Scanner'
                     withSonarQubeEnv('sonarqube') {
                         sh "${scannerHome}/bin/sonar-scanner \
                             -Dsonar.projectKey=Chat-application \
